@@ -4,16 +4,20 @@ const taskForm = document.querySelector(`.add-task`);
 const taskList = document.querySelector(`.task-list`);
 const newList = document.querySelector(`.new-list`);
 const doneList = document.querySelector(`.done-list`);
-const taskArr = [];
-const doneArr = [];
+const tasks = {
+	todoArr: [],
+	doneArr: [],
+};
 
 const render = function () {
 	// clears exisiting tasks
 	newList.textContent = ``;
 	doneList.textContent = ``;
 
+	if (tasks.todoArr.length === 0 && tasks.doneArr.length === 0) newList.insertAdjacentHTML(`afterbegin`, `<div class="placeholder task">your tasks will show up here</div>`);
+
 	// creates a task for new tasks
-	taskArr.forEach(item =>
+	tasks.todoArr.forEach(item =>
 		newList.insertAdjacentHTML(
 			`afterbegin`,
 			`
@@ -28,7 +32,7 @@ const render = function () {
 	);
 
 	// creates a task for done tasks
-	doneArr.forEach(item =>
+	tasks.doneArr.forEach(item =>
 		doneList.insertAdjacentHTML(
 			`afterbegin`,
 			`
@@ -43,11 +47,20 @@ const render = function () {
 	);
 };
 
+const init = function () {
+	const savedTasks = localStorage.getItem(`tasks`);
+	tasks.todoArr = JSON.parse(savedTasks).todoArr;
+	tasks.doneArr = JSON.parse(savedTasks).doneArr;
+	console.log(tasks.todoArr.length, tasks.doneArr.length);
+	render();
+};
+init();
+
 taskForm.addEventListener(`submit`, function (e) {
 	e.preventDefault();
 
 	// save task to array
-	taskArr.push(input.value);
+	tasks.todoArr.push(input.value);
 
 	// reset task field
 	input.value = ``;
@@ -65,37 +78,40 @@ taskList.addEventListener(`click`, function (e) {
 		const taskName = e.target.parentElement.parentElement.querySelector(`.task-text`).textContent;
 
 		// gets index of task in array
-		const taskIndex = e.target.parentElement.parentElement.parentElement.className === `new-list` ? taskArr.indexOf(taskName) : doneArr.indexOf(taskName);
+		const taskIndex = e.target.parentElement.parentElement.parentElement.className === `new-list` ? tasks.todoArr.indexOf(taskName) : tasks.doneArr.indexOf(taskName);
 
 		// when done clicked
 		if (e.target.textContent === `done`) {
 			// adds task to done list
-			doneArr.push(taskName);
+			tasks.doneArr.push(taskName);
 
 			// removes task from task list
-			taskArr.splice(taskIndex, 1);
+			tasks.todoArr.splice(taskIndex, 1);
 
 			// when edit clicked
 		} else if (e.target.textContent === `edit`) {
 			// gets edited text
-			newTask = prompt(`edited name`);
+			newTask = prompt(`new name`);
 
 			// edits array item
-			taskArr.splice(taskIndex, 1, newTask);
+			tasks.todoArr.splice(taskIndex, 1, newTask);
 
 			// when add clicked
 		} else if (e.target.textContent === `add`) {
 			// adds task to task list
-			taskArr.push(taskName);
+			tasks.todoArr.push(taskName);
 
 			// removes task from done list
-			doneArr.splice(taskIndex, 1);
+			tasks.doneArr.splice(taskIndex, 1);
 
 			// when delete clicked
 		} else if (e.target.textContent === `del`) {
 			// removes item from array
-			doneArr.splice(taskIndex, 1);
+			tasks.doneArr.splice(taskIndex, 1);
 		}
+
+		// saves tasks to local storage
+		localStorage.setItem(`tasks`, JSON.stringify(tasks));
 
 		// refreshes ui
 		render();
