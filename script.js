@@ -17,9 +17,6 @@ const render = function () {
 	newList.textContent = ``;
 	doneList.textContent = ``;
 
-	console.log(tasks);
-	console.log(localStorage);
-
 	// creates placeholder if no tasks
 	if (tasks.todoArr.length === 0 && tasks.doneArr.length === 0) newList.insertAdjacentHTML(`afterbegin`, `<div class="placeholder task">your tasks will show up here</div>`);
 
