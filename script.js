@@ -14,6 +14,7 @@ const render = function () {
 	newList.textContent = ``;
 	doneList.textContent = ``;
 
+	// creates placeholder if no tasks
 	if (tasks.todoArr.length === 0 && tasks.doneArr.length === 0) newList.insertAdjacentHTML(`afterbegin`, `<div class="placeholder task">your tasks will show up here</div>`);
 
 	// creates a task for new tasks
@@ -48,10 +49,14 @@ const render = function () {
 };
 
 const init = function () {
-	const savedTasks = localStorage.getItem(`tasks`);
-	tasks.todoArr = JSON.parse(savedTasks).todoArr;
-	tasks.doneArr = JSON.parse(savedTasks).doneArr;
-	console.log(tasks.todoArr.length, tasks.doneArr.length);
+	// gets tasks from storage
+	savTasks = JSON.parse(localStorage.getItem(`tasks`));
+
+	// adds tasks to task arrays
+	savTasks.todoArr.forEach(item => tasks.todoArr.push(item));
+	savTasks.doneArr.forEach(item => tasks.doneArr.push(item));
+
+	// refreshes ui
 	render();
 };
 init();
@@ -111,7 +116,7 @@ taskList.addEventListener(`click`, function (e) {
 		}
 
 		// saves tasks to local storage
-		localStorage.setItem(`tasks`, JSON.stringify(tasks));
+		window.localStorage.setItem(`tasks`, JSON.stringify(tasks));
 
 		// refreshes ui
 		render();
