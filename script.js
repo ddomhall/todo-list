@@ -1,4 +1,3 @@
-const body = document.querySelector(`body`);
 const input = document.querySelector(`.input`);
 const taskForm = document.querySelector(`.add-task`);
 const taskList = document.querySelector(`.task-list`);
@@ -9,10 +8,17 @@ const tasks = {
 	doneArr: [],
 };
 
+const updateSav = function () {
+	window.localStorage.setItem(`tasks`, JSON.stringify(tasks));
+};
+
 const render = function () {
 	// clears exisiting tasks
 	newList.textContent = ``;
 	doneList.textContent = ``;
+
+	console.log(tasks);
+	console.log(localStorage);
 
 	// creates placeholder if no tasks
 	if (tasks.todoArr.length === 0 && tasks.doneArr.length === 0) newList.insertAdjacentHTML(`afterbegin`, `<div class="placeholder task">your tasks will show up here</div>`);
@@ -41,7 +47,7 @@ const render = function () {
 				<p class="task-text">${item}</p>
 				<div class="buttons">
 					<button class="btn-add">add</button>
-					<button class="btn-del">del</button>
+					<button class="btn-del">delete</button>
 				</div>
 			</div>`
 		)
@@ -50,7 +56,7 @@ const render = function () {
 
 const init = function () {
 	// gets tasks from storage
-	savTasks = JSON.parse(localStorage.getItem(`tasks`));
+	const savTasks = JSON.parse(localStorage.getItem(`tasks`));
 
 	// adds tasks to task arrays
 	savTasks.todoArr.forEach(item => tasks.todoArr.push(item));
@@ -66,6 +72,7 @@ taskForm.addEventListener(`submit`, function (e) {
 
 	// save task to array
 	tasks.todoArr.push(input.value);
+	updateSav();
 
 	// reset task field
 	input.value = ``;
@@ -85,7 +92,7 @@ taskList.addEventListener(`click`, function (e) {
 		// gets index of task in array
 		const taskIndex = e.target.parentElement.parentElement.parentElement.className === `new-list` ? tasks.todoArr.indexOf(taskName) : tasks.doneArr.indexOf(taskName);
 
-		// when done clicked
+		// when `done` clicked
 		if (e.target.textContent === `done`) {
 			// adds task to done list
 			tasks.doneArr.push(taskName);
@@ -93,7 +100,7 @@ taskList.addEventListener(`click`, function (e) {
 			// removes task from task list
 			tasks.todoArr.splice(taskIndex, 1);
 
-			// when edit clicked
+			// when `edit` clicked
 		} else if (e.target.textContent === `edit`) {
 			// gets edited text
 			newTask = prompt(`new name`);
@@ -101,7 +108,7 @@ taskList.addEventListener(`click`, function (e) {
 			// edits array item
 			tasks.todoArr.splice(taskIndex, 1, newTask);
 
-			// when add clicked
+			// when `add` clicked
 		} else if (e.target.textContent === `add`) {
 			// adds task to task list
 			tasks.todoArr.push(taskName);
@@ -109,14 +116,14 @@ taskList.addEventListener(`click`, function (e) {
 			// removes task from done list
 			tasks.doneArr.splice(taskIndex, 1);
 
-			// when delete clicked
-		} else if (e.target.textContent === `del`) {
+			// when `delete` clicked
+		} else if (e.target.textContent === `delete`) {
 			// removes item from array
 			tasks.doneArr.splice(taskIndex, 1);
 		}
 
 		// saves tasks to local storage
-		window.localStorage.setItem(`tasks`, JSON.stringify(tasks));
+		updateSav();
 
 		// refreshes ui
 		render();
