@@ -1,0 +1,61 @@
+body {
+	max-width: 500px;
+	margin: auto;
+	text-align: center;
+	background: radial-gradient(circle, rgba(0, 52, 255, 1) 0%, rgba(0, 0, 0, 1) 100%);
+}
+
+.header {
+	background: orange;
+	border-radius: 20px;
+	padding-bottom: 10px;
+}
+
+.label {
+	display: block;
+}
+.input {
+	border: 1px solid yellow;
+	border-radius: 10px;
+	text-align: center;
+	height: 20px;
+}
+
+.submit {
+	border: 1px solid yellow;
+	border-radius: 50%;
+}
+
+.green {
+	background: green;
+}
+
+.red {
+	background: red;
+}
+
+.task {
+	background: orange;
+	border-radius: 20px;
+	margin: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+}
+
+.task-title {
+	border-radius: 20px;
+	margin: 20px;
+	padding: 10px;
+}
+
+.task-text {
+	padding: 15px;
+	max-width: 300px;
+	word-wrap: break-word;
+}
+
+.btn-done {
+	margin: 15px;
+}
