@@ -53,7 +53,8 @@ const render = function () {
 
 const init = function () {
 	// gets tasks from storage
-	const savTasks = JSON.parse(localStorage.getItem(`tasks`));
+	if (localStorage.length === 0) updateSav();
+	else savTasks = JSON.parse(localStorage.getItem(`tasks`));
 
 	// adds tasks to task arrays
 	savTasks.todoArr.forEach(item => tasks.todoArr.push(item));
